@@ -200,7 +200,7 @@ impl EthicrawlerContract {
         // In a real implementation, this would properly decode and verify JWT
         // For MVP, we'll return a fixed payment ID for testing
         // We need to check if the token is empty to handle the BadJWT case
-        if jwt_token.to_string().is_empty() {
+        if jwt_token.is_empty() {
             String::from_str(env, "")
         } else {
             String::from_str(env, "pay_123456789")
