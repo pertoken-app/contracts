@@ -54,10 +54,10 @@ pub struct PaymentRecord {
 }
 
 #[contract]
-pub struct EthicrawlerContract;
+pub struct PerTokenContract;
 
 #[contractimpl]
-impl EthicrawlerContract {
+impl PerTokenContract {
     /// Generate a unique payment invoice for content access
     /// Returns the payment invoice with unique ID and expiration
     pub fn request_payment(
@@ -193,7 +193,7 @@ impl EthicrawlerContract {
     fn generate_jwt(env: &Env, _payment_record: &PaymentRecord) -> String {
         // In a real implementation, this would generate a proper JWT with signature
         // For MVP, we'll create a simple token format
-        String::from_str(&env, "ethicrawler.jwt.token")
+        String::from_str(&env, "pertoken.jwt.token")
     }
 
     fn extract_payment_id_from_jwt(env: &Env, jwt_token: &String) -> String {
@@ -209,9 +209,9 @@ impl EthicrawlerContract {
 }
 
 // -----------------------------------------------------------------------------
-// Test Coverage for EthicrawlerContract
+// Test Coverage for PerTokenContract
 //
-// This module contains unit tests for EthicrawlerContract covering **all branches**.
+// This module contains unit tests for PerTokenContract covering **all branches**.
 //
 // 1. request_payment happy path
 //     - Creates a new payment invoice with correct fields and expiration.
@@ -255,7 +255,7 @@ mod test {
 
     fn setup_env() -> (Env, soroban_sdk::Address) {
         let env = Env::default();
-        let contract_id = env.register(EthicrawlerContract, ());
+        let contract_id = env.register(PerTokenContract, ());
         env.ledger().with_mut(|li| li.timestamp = 1000);
         (env, contract_id)
     }
@@ -268,7 +268,7 @@ mod test {
         let amount = 1000000i128;
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(
+            PerTokenContract::request_payment(
                 env.clone(),
                 site_id.clone(),
                 url_hash.clone(),
@@ -292,14 +292,14 @@ mod test {
         let amount = 1000000i128;
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(env.clone(), site_id, url_hash, amount)
+            PerTokenContract::request_payment(env.clone(), site_id, url_hash, amount)
         });
 
         let tx_hash = String::from_str(&env, "stellar_tx_hash_123456");
         let payer_key = String::from_str(&env, "GCKFBEI...");
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id.clone(),
                 tx_hash,
@@ -309,7 +309,7 @@ mod test {
 
         assert!(result.is_ok());
         let jwt = result.unwrap();
-        assert!(jwt.to_string().starts_with("ethicrawler."));
+        assert!(jwt.to_string().starts_with("pertoken."));
     }
 
     #[test]
@@ -317,7 +317,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(
+            PerTokenContract::request_payment(
                 env.clone(),
                 String::from_str(&env, "site123"),
                 String::from_str(&env, "hash456"),
@@ -328,7 +328,7 @@ mod test {
         env.ledger().with_mut(|li| li.timestamp = 5000);
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id,
                 String::from_str(&env, "tx_hash_123"),
@@ -344,7 +344,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(
+            PerTokenContract::request_payment(
                 env.clone(),
                 String::from_str(&env, "site123"),
                 String::from_str(&env, "hash456"),
@@ -357,7 +357,7 @@ mod test {
 
         // First payment
         let _ = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id.clone(),
                 tx_hash.clone(),
@@ -367,7 +367,7 @@ mod test {
 
         // Second payment attempt
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id,
                 tx_hash,
@@ -383,7 +383,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(
+            PerTokenContract::request_payment(
                 env.clone(),
                 String::from_str(&env, "site123"),
                 String::from_str(&env, "hash456"),
@@ -394,7 +394,7 @@ mod test {
         let bad_tx_hash = String::from_str(&env, "bad");
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id,
                 bad_tx_hash,
@@ -410,7 +410,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 String::from_str(&env, "nonexistent_id"),
                 String::from_str(&env, "tx_hash_123"),
@@ -426,7 +426,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let invoice = env.as_contract(&contract_id, || {
-            EthicrawlerContract::request_payment(
+            PerTokenContract::request_payment(
                 env.clone(),
                 String::from_str(&env, "site123"),
                 String::from_str(&env, "hash456"),
@@ -435,7 +435,7 @@ mod test {
         });
 
         let _ = env.as_contract(&contract_id, || {
-            EthicrawlerContract::submit_payment(
+            PerTokenContract::submit_payment(
                 env.clone(),
                 invoice.payment_id.clone(),
                 String::from_str(&env, "stellar_tx_hash_123456"),
@@ -444,9 +444,9 @@ mod test {
         });
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::verify_jwt(
+            PerTokenContract::verify_jwt(
                 env.clone(),
-                String::from_str(&env, "ethicrawler.jwt.token"),
+                String::from_str(&env, "pertoken.jwt.token"),
             )
         });
 
@@ -460,7 +460,7 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::verify_jwt(
+            PerTokenContract::verify_jwt(
                 env.clone(),
                 String::from_str(&env, ""),
             )
@@ -474,9 +474,9 @@ mod test {
         let (env, contract_id) = setup_env();
 
         let result = env.as_contract(&contract_id, || {
-            EthicrawlerContract::verify_jwt(
+            PerTokenContract::verify_jwt(
                 env.clone(),
-                String::from_str(&env, "ethicrawler.jwt.token"),
+                String::from_str(&env, "pertoken.jwt.token"),
             )
         });
 
