@@ -21,6 +21,14 @@ Verifies payment transaction and authorizes content access.
 ### `get_content_access(content_id, user_key)`
 Validates user's payment and returns content access authorization.
 
+## Deployed Contracts
+
+### Futurenet
+- **Contract ID**: `CC4N2TWAOLYTTQL43JTDKT6TLJAEIDCGROSQNP74WFTHKKA2RBUREDJKMaybe`
+- **Network**: Futurenet
+- **RPC URL**: `https://rpc-futurenet.stellar.org:443`
+- **Deployed**: January 20, 2025
+
 ## Development
 
 ```bash
@@ -32,7 +40,14 @@ stellar contract test
 
 # Deploy to testnet
 stellar contract deploy --network testnet
+
+# Deploy to futurenet
+stellar contract deploy --network futurenet
 ```
+
+## Configuration
+
+Contract deployment information is stored in `contract-config.json` for easy reference by the backend and other services.
 
 ## Requirements
 

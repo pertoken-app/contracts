@@ -1,0 +1,12 @@
+{
+  "networks": {
+    "futurenet": {
+      "contractId": "CC4N2TWAOLYTTQL43JTDKT6TLJAEIDCGROSQNP74WFTHKKA2RBUREDJKMaybe",
+      "network": "futurenet",
+      "deployedAt": "2025-01-20",
+      "rpcUrl": "https://rpc-futurenet.stellar.org:443"
+    }
+  },
+  "contractName": "PerTokenContract",
+  "version": "1.0.0"
+}
