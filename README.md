@@ -25,18 +25,18 @@ Validates user's payment and returns content access authorization.
 
 ```bash
 # Build the contract
-soroban contract build
+stellar contract build
 
 # Run tests
-soroban contract test
+stellar contract test
 
 # Deploy to testnet
-soroban contract deploy --network testnet
+stellar contract deploy --network testnet
 ```
 
 ## Requirements
 
-- Soroban CLI
+- Stellar CLI (v23+)
 - Rust toolchain
 - Stellar account for deployment
 
