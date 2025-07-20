@@ -1,22 +1,25 @@
-# Ethicrawler Soroban Smart Contract
+# Stellar Paywall System - Smart Contracts
 
-A Soroban smart contract that handles payment processing and proof generation for the Ethicrawler pay-per-crawl system.
+Soroban smart contracts for the Stellar blockchain-based paywall system that enables pay-per-token content access.
 
 ## Features
 
-- Payment invoice generation with unique identifiers
+- Token-based payment processing for content access
 - Stellar blockchain payment verification
-- JWT proof token issuance for authenticated content access
+- Content access authorization and proof generation
 - Transparent on-chain payment logging
-- Cryptographically secure payment validation
+- Secure payment validation and token management
 
 ## Contract Functions
 
-### `request_payment(site_id, url_hash, amount)`
-Generates a unique payment invoice for content access.
+### `request_payment(content_id, token_amount)`
+Generates a unique payment request for token-based content access.
 
-### `submit_payment(payment_id, tx_hash, payer_key)`
-Verifies payment transaction and issues JWT proof token.
+### `verify_payment(payment_id, tx_hash, payer_key)`
+Verifies payment transaction and authorizes content access.
+
+### `get_content_access(content_id, user_key)`
+Validates user's payment and returns content access authorization.
 
 ## Development
 
